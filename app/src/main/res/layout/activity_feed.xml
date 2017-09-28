@@ -7,8 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="com.chirpper.cwalker2209.chirpper.FeedActivity">
 
-    <include layout="@layout/content_feed" />
-
     <include
         layout="@layout/activity_navigation"
         android:layout_width="match_parent"
