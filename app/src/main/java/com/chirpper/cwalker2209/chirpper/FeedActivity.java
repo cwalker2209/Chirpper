@@ -84,7 +84,8 @@ public class FeedActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_feed) {
 
         } else if (id == R.id.nav_slideshow) {

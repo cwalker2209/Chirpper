@@ -43,6 +43,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chirpper.cwalker2209.chirpper.LoginActivity" />
         </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:parentActivityName=".FeedActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chirpper.cwalker2209.chirpper.FeedActivity" />
+        </activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="Edit"
+            android:parentActivityName=".ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chirpper.cwalker2209.chirpper.ProfileActivity" />
+        </activity>
     </application>
 
 </manifest>
