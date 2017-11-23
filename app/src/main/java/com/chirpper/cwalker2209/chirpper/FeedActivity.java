@@ -104,4 +104,8 @@ public class FeedActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    //TODO: Add method for creating tweet and saving it to the database
+
+    //TODO: Add method for getting tweets from database
 }

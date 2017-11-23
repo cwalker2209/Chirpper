@@ -10,4 +10,8 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
     }
+
+    //TODO: Add method to save profile to Database
+
+    //TODO: Add method to get profile from Database
 }
