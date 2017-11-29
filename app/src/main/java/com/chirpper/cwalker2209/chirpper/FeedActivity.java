@@ -1,6 +1,8 @@
 package com.chirpper.cwalker2209.chirpper;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,7 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.TextureView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 public class FeedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -108,4 +115,25 @@ public class FeedActivity extends AppCompatActivity
     //TODO: Add method for creating tweet and saving it to the database
 
     //TODO: Add method for getting tweets from database
+
+    private void addMessage(String message, Bitmap picture) {
+        TableLayout table = findViewById(R.id.feedTable);
+        TableRow row = new TableRow(this);
+        ImageView image = new ImageView(this);
+        TextView text = new TextView(this);
+
+        image.setId(View.generateViewId());
+        //TODO: Get picture from profile
+        image.setImageBitmap(picture);
+
+        text.setId(View.generateViewId());
+        text.setText(message);
+
+        row.setId(View.generateViewId());
+        row.addView(image);
+        row.addView(text);
+
+        table.addView(row, 0);
+        table.invalidate();
+    }
 }
