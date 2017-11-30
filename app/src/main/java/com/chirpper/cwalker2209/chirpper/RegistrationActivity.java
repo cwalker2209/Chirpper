@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +32,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
+import com.chirpper.cwalker2209.chirpper.database.Profile;
+import com.chirpper.cwalker2209.chirpper.database.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +53,12 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserRegisterTask mAuthTask = null;
+
+    //database reference
+    AppDatabase db;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -72,6 +73,9 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
         setContentView(R.layout.activity_registration);
         //Theme has no action bar
         //setupActionBar();
+
+        //get database
+        db = App.get().getDB();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -98,7 +102,6 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
                 attemptRegister();
             }
         });
-
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -345,25 +348,23 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                User existing = db.userDao().findByEmail(mEmail);
+                if (existing != null){
+                    return false;
+                }
+
+                User user = new User(mEmail, mPassword);
+                long userId = db.userDao().insert(user);
+                Profile profile = new Profile(mEmail, "Enter your description here.", userId);
+                db.profileDAO().insert(profile);
+                return true;
+            }
+            catch (Exception e){
+                Log.e("DB", e.getMessage());
                 return false;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
         }
 
         @Override
@@ -374,7 +375,7 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError("Email already used");
                 mPasswordView.requestFocus();
             }
         }

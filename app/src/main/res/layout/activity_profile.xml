@@ -48,22 +48,13 @@
                 android:text="Name" />
 
             <TextView
-                android:id="@+id/textViewHandle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/imageViewAvatar"
-                android:layout_alignLeft="@+id/textViewName"
-                android:layout_alignStart="@+id/textViewName"
-                android:text="Handle" />
-
-            <TextView
                 android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/textViewHandle"
-                android:layout_alignStart="@+id/textViewHandle"
-                android:layout_below="@+id/textViewHandle"
-                android:layout_marginTop="45dp"
+                android:layout_alignLeft="@+id/textViewName"
+                android:layout_alignStart="@+id/textViewName"
+                android:layout_below="@+id/imageViewAvatar"
+                android:layout_marginTop="38dp"
                 android:text="Date" />
 
             <TextView

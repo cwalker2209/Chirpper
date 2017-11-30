@@ -1,5 +1,6 @@
 package com.chirpper.cwalker2209.chirpper;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Image;
@@ -20,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
 
 public class FeedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,6 +51,8 @@ public class FeedActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });*/
+
+
     }
 
     @Override
