@@ -13,14 +13,14 @@ import java.util.List;
 
 @Dao
 public interface PostDAO {
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM post")
     List<Post> getAll();
 
-    @Query("SELECT * FROM post WHERE uid IN (:userIds)")
+    @Query("SELECT * FROM post WHERE id IN (:userIds)")
     List<Post> loadAllByIds(int[] userIds);
 
-    @Query("SELECT * FROM post WHERE name LIKE :name LIMIT 1")
-    Post findByName(String name);
+    @Query("SELECT * FROM post WHERE text LIKE :text LIMIT 1")
+    Post findByText(String text);
 
     @Insert
     void insertAll(Post... posts);

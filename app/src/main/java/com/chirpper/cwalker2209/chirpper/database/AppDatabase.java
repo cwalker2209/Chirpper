@@ -2,6 +2,7 @@ package com.chirpper.cwalker2209.chirpper.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
 
 import com.chirpper.cwalker2209.chirpper.App;
@@ -11,6 +12,7 @@ import com.chirpper.cwalker2209.chirpper.App;
  */
 
 @Database(entities = {User.class, Profile.class, Post.class}, version = 1)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDAO userDao();
     public abstract ProfileDAO profileDAO();

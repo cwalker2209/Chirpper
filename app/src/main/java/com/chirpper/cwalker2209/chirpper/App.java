@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 
 import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
 import com.chirpper.cwalker2209.chirpper.database.User;
+import com.facebook.stetho.Stetho;
 
 public class App extends Application {
 
@@ -37,6 +38,27 @@ public class App extends Application {
                 .build();
 
         INSTANCE = this;
+
+        //Stetho init
+        // Create an InitializerBuilder
+        Stetho.InitializerBuilder initializerBuilder =
+                Stetho.newInitializerBuilder(this);
+
+        // Enable Chrome DevTools
+                initializerBuilder.enableWebKitInspector(
+                        Stetho.defaultInspectorModulesProvider(this)
+                );
+
+        // Enable command line interface
+                initializerBuilder.enableDumpapp(
+                        Stetho.defaultDumperPluginsProvider(this)
+                );
+
+        // Use the InitializerBuilder to generate an Initializer
+                Stetho.Initializer initializer = initializerBuilder.build();
+
+        // Initialize Stetho with the Initializer
+                Stetho.initialize(initializer);
     }
 
     public AppDatabase getDB() {

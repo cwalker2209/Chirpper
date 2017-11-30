@@ -15,10 +15,10 @@ import java.util.List;
 
 @Dao
 public interface ProfileDAO {
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM profile")
     List<Profile> getAll();
 
-    @Query("SELECT * FROM profile WHERE uid IN (:userIds)")
+    @Query("SELECT * FROM profile WHERE id IN (:userIds)")
     List<Profile> loadAllByIds(int[] userIds);
 
     @Query("SELECT * FROM profile WHERE name LIKE :name LIMIT 1")
