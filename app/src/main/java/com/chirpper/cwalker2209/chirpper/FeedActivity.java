@@ -23,9 +23,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
+import com.chirpper.cwalker2209.chirpper.database.Post;
+import com.chirpper.cwalker2209.chirpper.database.Profile;
+
+import java.util.List;
 
 public class FeedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    //database reference
+    AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,9 @@ public class FeedActivity extends AppCompatActivity
         setContentView(R.layout.activity_feed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //get database
+        db = App.get().getDB();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -120,6 +130,16 @@ public class FeedActivity extends AppCompatActivity
     //TODO: Add method for creating tweet and saving it to the database
 
     //TODO: Add method for getting tweets from database
+    private void getPosts(){
+        TableLayout table = findViewById(R.id.feedTable);
+        table.removeAllViewsInLayout();
+
+        List<Post> posts = db.postDAO().getAll();
+        List<Profile> profiles = db.profileDAO().getAll();
+        for (Post post : posts) {
+            addMessage(post.text, null);
+        }
+    }
 
     private void addMessage(String message, Bitmap picture) {
         TableLayout table = findViewById(R.id.feedTable);

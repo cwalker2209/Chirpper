@@ -19,11 +19,11 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class Post {
 
         @PrimaryKey(autoGenerate = true)
-        long id;
-        long userId;
+        public long id;
+        public long userId;
 
-        Date created;
-        String text;
+        public Date created;
+        public String text;
 
         public Post(String text){
             this.text = text;

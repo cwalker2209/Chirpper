@@ -3,6 +3,7 @@ package com.chirpper.cwalker2209.chirpper;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -66,6 +67,8 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
     private EditText mPasswordConfirmView;
     private View mProgressView;
     private View mLoginFormView;
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,19 +217,11 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            /*showProgress(true);
+            showProgress(true);
+            intent = new Intent(this, LoginActivity.class);
             mAuthTask = new UserRegisterTask(email, password);
-            mAuthTask.execute((Void) null);*/
+            mAuthTask.execute((Void) null);
 
-            Context context = getApplicationContext();
-            CharSequence text = "Registration Successful";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
         }
     }
 
@@ -373,7 +368,16 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
             showProgress(false);
 
             if (success) {
+                Context context = getApplicationContext();
+                CharSequence text = "Registration Successful";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+
+                startActivity(intent);
                 finish();
+
             } else {
                 mPasswordView.setError("Email already used");
                 mPasswordView.requestFocus();
