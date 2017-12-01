@@ -326,6 +326,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 User user = db.userDao().findByEmail(mEmail);
                 if ( user.password.equals(mPassword)){
+                    App.get().setUserId(user.id);
                     return true;
                 }
             }
