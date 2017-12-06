@@ -28,71 +28,56 @@
                 android:id="@+id/imageViewAvatar"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="31dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 app:srcCompat="@mipmap/ic_launcher" />
 
-            <TextView
-                android:id="@+id/textViewName"
+            <EditText
+                android:id="@+id/editTextName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/imageViewAvatar"
-                android:layout_centerVertical="true"
-                android:text="Name"
-                android:textSize="30sp" />
+                android:layout_alignStart="@+id/buttonChangeAvatar"
+                android:layout_alignTop="@+id/imageViewAvatar"
+                android:ems="10"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:text="Name" />
 
-            <TextView
-                android:id="@+id/textViewDate"
+            <EditText
+                android:id="@+id/editTextDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textView"
-                android:layout_alignBottom="@+id/textView"
-                android:layout_marginStart="13dp"
-                android:layout_toEndOf="@+id/textView"
-                android:text="Date"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/textViewDescription"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textView2"
-                android:layout_below="@+id/textView2"
-                android:layout_marginTop="12dp"
-                android:text="Description Text" />
+                android:layout_alignLeft="@+id/editTextName"
+                android:layout_alignStart="@+id/editTextName"
+                android:layout_below="@+id/editTextName"
+                android:layout_marginTop="26dp"
+                android:ems="10"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:text="Descripiton" />
 
             <Button
-                android:id="@+id/buttonEditProfile"
+                android:id="@+id/buttonSaveProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginBottom="46dp"
-                android:layout_marginEnd="28dp"
-                android:text="Edit Profile" />
+                android:layout_alignBottom="@+id/imageViewAvatar"
+                android:layout_marginStart="19dp"
+                android:layout_toEndOf="@+id/buttonChangeAvatar"
+                android:text="Save Changes" />
 
-            <TextView
-                android:id="@+id/textView"
+            <Button
+                android:id="@+id/buttonChangeAvatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textViewName"
-                android:layout_below="@+id/textViewName"
-                android:layout_marginTop="13dp"
-                android:text="Date Started"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_alignTop="@+id/buttonSaveProfile"
+                android:layout_marginStart="41dp"
+                android:layout_toEndOf="@+id/imageViewAvatar"
+                android:text="Change Avatar" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textView"
-                android:layout_below="@+id/textView"
-                android:layout_marginTop="11dp"
-                android:text="Description"
-                android:textStyle="bold" />
         </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -107,3 +92,4 @@
         app:menu="@menu/activity_navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
+
