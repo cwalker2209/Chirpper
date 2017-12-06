@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,11 +77,13 @@ public class ProfileActivity extends AppCompatActivity {
             if (success) {
                 TextView name = findViewById(R.id.textViewName);
                 TextView date = findViewById(R.id.textViewDate);
-                TextView descripiton = findViewById(R.id.textViewDescription);
+                TextView description = findViewById(R.id.textViewDescription);
+                ImageView imageViewAvatar = findViewById(R.id.imageViewAvatar);
 
                 name.setText(profile.name);
                 date.setText(profile.created.toString());
-                descripiton.setText(profile.description);
+                description.setText(profile.description);
+                imageViewAvatar.setImageBitmap(profile.image);
             } else {
                 Context context = getApplicationContext();
                 CharSequence text = "Profile failed to load";

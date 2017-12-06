@@ -1,8 +1,12 @@
 package com.chirpper.cwalker2209.chirpper.database;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.graphics.Bitmap;
+
+import com.chirpper.cwalker2209.chirpper.R;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -26,11 +30,15 @@ public class Profile {
     public Date created;
     public String description;
 
-    public Profile(String name, String description, long userId){
+    //@ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    public Bitmap image;
+
+    public Profile(String name, String description, Bitmap image, long userId){
         this.name = name;
         created = Calendar.getInstance().getTime();
         this.description = description;
         this.userId = userId;
+        this.image = image;
     }
 
 }

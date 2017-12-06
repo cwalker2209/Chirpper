@@ -186,4 +186,5 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_registration">Register</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

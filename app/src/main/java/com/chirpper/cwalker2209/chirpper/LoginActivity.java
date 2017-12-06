@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -331,6 +332,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
             catch (Exception e){
+                Log.e("LOGIN", e.getMessage());
                 return false;
             }
 

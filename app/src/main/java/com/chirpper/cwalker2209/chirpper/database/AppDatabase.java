@@ -11,7 +11,7 @@ import com.chirpper.cwalker2209.chirpper.App;
  * Created by CommandModule on 2017-11-26.
  */
 
-@Database(entities = {User.class, Profile.class, Post.class}, version = 1)
+@Database(entities = {User.class, Profile.class, Post.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDAO userDao();

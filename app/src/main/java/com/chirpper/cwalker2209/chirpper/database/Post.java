@@ -25,8 +25,9 @@ public class Post {
         public Date created;
         public String text;
 
-        public Post(String text){
+        public Post(String text, long userId){
             this.text = text;
+            this.userId = userId;
             created = Calendar.getInstance().getTime();
         }
 }

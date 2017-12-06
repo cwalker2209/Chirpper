@@ -34,7 +34,7 @@ public class App extends Application {
 
         // create database
         database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, DATABASE_NAME)
-                //.addMigrations(AppDatabase.MIGRATION_1_2)
+                .fallbackToDestructiveMigration()
                 .build();
 
         INSTANCE = this;

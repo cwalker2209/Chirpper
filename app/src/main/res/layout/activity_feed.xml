@@ -9,6 +9,7 @@
     >
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -20,11 +21,39 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <include
-            layout="@layout/content_feed"
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                app:elevation="@dimen/fab_margin"
+                app:srcCompat="@drawable/ic_sync_black_24dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_weight="1"
+                android:visibility="visible"
+                app:elevation="@dimen/fab_margin"
+                app:srcCompat="@drawable/ic_menu_send" />
+
+            <include
+                layout="@layout/content_feed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </android.support.design.widget.CoordinatorLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -35,6 +64,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_navigation"
-        app:menu="@menu/activity_navigation_drawer" />
+        app:menu="@menu/activity_navigation_drawer" >
+
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

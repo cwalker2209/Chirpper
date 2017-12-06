@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -219,7 +222,14 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
             // perform the user login attempt.
             showProgress(true);
             intent = new Intent(this, LoginActivity.class);
-            mAuthTask = new UserRegisterTask(email, password);
+
+            //TODO:fix bad picture getting
+            ImageView image = new ImageView(this);
+            image.setImageResource(R.mipmap.ic_launcher);
+            BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+
+            mAuthTask = new UserRegisterTask(email, password, bitmap);
             mAuthTask.execute((Void) null);
 
         }
@@ -335,10 +345,12 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
 
         private final String mEmail;
         private final String mPassword;
+        private final Bitmap mPicture;
 
-        UserRegisterTask(String email, String password) {
+        UserRegisterTask(String email, String password, Bitmap picture) {
             mEmail = email;
             mPassword = password;
+            mPicture = picture;
         }
 
         @Override
@@ -352,7 +364,7 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
 
                 User user = new User(mEmail, mPassword);
                 long userId = db.userDao().insert(user);
-                Profile profile = new Profile(mEmail, "Enter your description here.", userId);
+                Profile profile = new Profile(mEmail, "Enter your description here.",mPicture, userId);
                 db.profileDAO().insert(profile);
                 return true;
             }

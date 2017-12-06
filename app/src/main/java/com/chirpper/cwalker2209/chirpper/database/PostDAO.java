@@ -27,4 +27,7 @@ public interface PostDAO {
 
     @Delete
     void delete(Post posts);
+
+    @Insert
+    void insert(Post post);
 }
