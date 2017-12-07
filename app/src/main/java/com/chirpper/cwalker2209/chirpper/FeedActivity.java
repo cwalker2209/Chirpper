@@ -158,7 +158,7 @@ public class FeedActivity extends AppCompatActivity
     private void addMessage(String message, Bitmap picture) {
         TableLayout table = findViewById(R.id.feedTable);
         TableRow row = createChirp();
-        ImageView image = new ImageView(this);
+        ImageView image = new ImageView(this, null, R.style.ChirpImage);
         TextView text = new TextView(this, null , R.style.Chirp);
 
         image.setId(View.generateViewId());
@@ -167,8 +167,10 @@ public class FeedActivity extends AppCompatActivity
             image.setImageResource(R.mipmap.ic_launcher);
         }
         else{
-            image.setImageBitmap(picture);
+            image.setImageBitmap(Bitmap.createScaledBitmap(picture, 72, 72, true));
         }
+        image.setMaxWidth(72);
+        image.setMaxHeight(72);
 
         text.setId(View.generateViewId());
         text.setText(message);
@@ -200,7 +202,7 @@ public class FeedActivity extends AppCompatActivity
     private void addNewMessage(Bitmap picture) {
         TableLayout table = findViewById(R.id.feedTable);
         TableRow row = createChirp();
-        ImageView image = new ImageView(this);
+        ImageView image = new ImageView(this, null, R.style.ChirpImage);
         EditText text = new EditText(this);
 
         image.setId(View.generateViewId());
@@ -209,8 +211,10 @@ public class FeedActivity extends AppCompatActivity
             image.setImageResource(R.mipmap.ic_launcher);
         }
         else{
-            image.setImageBitmap(picture);
+            image.setImageBitmap(Bitmap.createScaledBitmap(picture, 72, 72, true));
         }
+        image.setMaxWidth(72);
+        image.setMaxHeight(72);
 
 
         editTextId = View.generateViewId();

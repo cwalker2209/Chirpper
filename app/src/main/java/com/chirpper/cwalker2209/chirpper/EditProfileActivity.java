@@ -23,10 +23,16 @@ import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
 import com.chirpper.cwalker2209.chirpper.database.Profile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private static int RESULT_LOAD_IMAGE = 1;
+    // this is the action code we use in our intent,
+    // this way we know we're looking at the response from our own action
+    private static final int RESULT_LOAD_IMG = 1;
+    private String selectedImagePath;
+
     private AppDatabase db;
     Profile profile = null;
     EditText editTextName;
@@ -55,8 +61,10 @@ public class EditProfileActivity extends AppCompatActivity {
         buttonChangeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                // select a file
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
             }
         });
     }
@@ -64,21 +72,24 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            ImageView imageView = findViewById(R.id.imageViewAvatar);
-            String absolutePath = new File (getFilesDir(), picturePath).getAbsolutePath();
-            Bitmap bitmap = BitmapFactory.decodeFile(absolutePath);
-            imageView.setImageBitmap(bitmap);
-            imageView.invalidate();
+
+        if (resultCode == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ImageView imageViewAvatar = findViewById(R.id.imageViewAvatar);
+                imageViewAvatar.setImageBitmap(selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+            }
+
+        }else {
+            Toast.makeText(this, "You haven't picked Image",Toast.LENGTH_LONG).show();
         }
     }
+
 
     protected class getProfileTask extends AsyncTask<Void, Void, Boolean> {
 
