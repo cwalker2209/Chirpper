@@ -1,14 +1,17 @@
 package com.chirpper.cwalker2209.chirpper;
 
+import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.inputmethodservice.Keyboard;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +39,7 @@ import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
 import com.chirpper.cwalker2209.chirpper.database.Post;
 import com.chirpper.cwalker2209.chirpper.database.Profile;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class FeedActivity extends AppCompatActivity
@@ -45,7 +50,7 @@ public class FeedActivity extends AppCompatActivity
 
     private int rowId;
     private int editTextId;
-    private Bitmap userPicture;
+    private Profile userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +79,7 @@ public class FeedActivity extends AppCompatActivity
         fabNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addNewMessage(userPicture);
+                addMessage(null, userProfile, true);
                 fabNew.setVisibility(View.INVISIBLE);
                 fabSave.setVisibility(View.VISIBLE);
             }
@@ -89,6 +94,13 @@ public class FeedActivity extends AppCompatActivity
             }
         });
 
+        //Remove original toolbar tittle
+        getSupportActionBar().setTitle(null);
+    }
+
+    @Override
+    protected void onStart () {
+        super.onStart();
         new getPostsTask().execute();
         new getUserPicture().execute();
     }
@@ -155,82 +167,80 @@ public class FeedActivity extends AppCompatActivity
         return true;
     }
 
-    private void addMessage(String message, Bitmap picture) {
+    private void addMessage(Post post, Profile profile, boolean isNew) {
         TableLayout table = findViewById(R.id.feedTable);
         TableRow row = createChirp();
         ImageView image = new ImageView(this, null, R.style.ChirpImage);
-        TextView text = new TextView(this, null , R.style.Chirp);
 
         image.setId(View.generateViewId());
         //TODO: Get picture from profile
-        if (picture == null){
+        if (profile.image == null){
             image.setImageResource(R.mipmap.ic_launcher);
         }
         else{
-            image.setImageBitmap(Bitmap.createScaledBitmap(picture, 72, 72, true));
+            image.setImageBitmap(Bitmap.createScaledBitmap(profile.image, 72, 72, true));
         }
         image.setMaxWidth(72);
         image.setMaxHeight(72);
 
-        text.setId(View.generateViewId());
-        text.setText(message);
 
-        row.setId(View.generateViewId());
+
+        rowId = View.generateViewId();
+        row.setId(rowId);
         row.addView(image);
-        row.addView(text);
+
+        if (isNew){
+            EditText editText = new EditText(this);
+
+            editTextId = View.generateViewId();
+            editText.setId(editTextId);
+            editText.requestFocus();
+
+            row.addView(editText);
+        }
+        else{
+            TextView textView = new TextView(this, null , R.style.Chirp);
+
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss");
+            String formatedDate = fmt.format(post.created);
+
+            textView.setId(View.generateViewId());
+            textView.setText(Html.fromHtml("<small>" + profile.name + "</small>" +  "<br />" +
+                    "<big>" + post.text + "</big>" + "<br />" +
+                    "<small>" + formatedDate + "</small>"));
+            textView.setPadding(10,0,0,0);
+
+            row.addView(textView);
+        }
 
         table.addView(row, 0);
         table.invalidate();
+
+        if(isNew){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
+        }
     }
 
-    private void cleanPost(){
+    private void cleanPost(Post post){
         TableRow row = findViewById(rowId);
         EditText editText = findViewById(editTextId);
         TextView textView = new TextView(this, null ,R.style.Chirp);
+        Profile profile = userProfile;
+
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss");
+        String formattedDate = fmt.format(post.created);
 
         textView.setId(View.generateViewId());
-        textView.setText(editText.getText());
+        textView.setText(Html.fromHtml("<small>" + profile.name + "</small>" +  "<br />" +
+                "<big>" + editText.getText() + "</big>" + "<br />" +
+                "<small>" + formattedDate + "</small>"));
+        textView.setPadding(10,0,0,0);
 
         row.removeView(editText);
         row.addView(textView);
 
         row.invalidate();
-    }
-
-
-
-    private void addNewMessage(Bitmap picture) {
-        TableLayout table = findViewById(R.id.feedTable);
-        TableRow row = createChirp();
-        ImageView image = new ImageView(this, null, R.style.ChirpImage);
-        EditText text = new EditText(this);
-
-        image.setId(View.generateViewId());
-        //TODO: Get picture from profile
-        if (picture == null){
-            image.setImageResource(R.mipmap.ic_launcher);
-        }
-        else{
-            image.setImageBitmap(Bitmap.createScaledBitmap(picture, 72, 72, true));
-        }
-        image.setMaxWidth(72);
-        image.setMaxHeight(72);
-
-
-        editTextId = View.generateViewId();
-        text.setId(editTextId);
-        text.requestFocus();
-
-        rowId = View.generateViewId();
-        row.setId(rowId);
-        row.addView(image);
-        row.addView(text);
-
-        table.addView(row, 0);
-        table.invalidate();
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
     }
 
     private TableRow createChirp(){
@@ -266,9 +276,15 @@ public class FeedActivity extends AppCompatActivity
 
                 List<Post> posts = db.postDAO().getAll();
                 //TODO: Fix with a proper db join
-                for (Post post : posts) {
-                    Profile profile = db.profileDAO().findByUserId(post.userId);
-                    addMessage(post.text, profile.image);
+                for (final Post post : posts) {
+                    final Profile profile = db.profileDAO().findByUserId(post.userId);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // This code will always run on the UI thread, therefore is safe to modify UI elements.
+                            addMessage(post, profile, false);
+                        }
+                    });
                 }
                 return true;
             } catch (Exception e) {
@@ -301,6 +317,7 @@ public class FeedActivity extends AppCompatActivity
     protected class savePostTask extends AsyncTask<Void, Void, Boolean> {
 
         private Context mContext;
+        private Post post;
 
         public savePostTask (Context context){
             mContext = context;
@@ -312,7 +329,7 @@ public class FeedActivity extends AppCompatActivity
             TableRow row = findViewById(rowId);
             EditText editText = findViewById(editTextId);
             TextView textView = new TextView(mContext);
-            Post post = new Post(editText.getText().toString(), App.get().getUserId());
+            post = new Post(editText.getText().toString(), App.get().getUserId());
 
             try {
                 db.postDAO().insert(post);
@@ -334,10 +351,10 @@ public class FeedActivity extends AppCompatActivity
 
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
-                cleanPost();
+                cleanPost(post);
             } else {
                 Context context = getApplicationContext();
-                CharSequence text = "Chirp failed to load";
+                CharSequence text = "Chirp failed to save";
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, text, duration);
@@ -353,7 +370,7 @@ public class FeedActivity extends AppCompatActivity
 
             try {
                 Profile profile = db.profileDAO().findByUserId(App.get().getUserId());
-                userPicture = profile.image;
+                userProfile = profile;
             }
             catch (Exception e){
                 Log.e( "DBPOROFILE", e.getMessage() );

@@ -25,7 +25,7 @@
     </style>
 
     <style name="Chirp" parent="@android:style/Widget.TextView">
-        <item name="android:layout_marginLeft">8sp</item>
+        <item name="android:paddingLeft">8dp</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 

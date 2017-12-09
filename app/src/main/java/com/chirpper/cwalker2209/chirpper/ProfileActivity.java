@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
 import com.chirpper.cwalker2209.chirpper.database.Profile;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private AppDatabase db;
@@ -40,6 +43,9 @@ public class ProfileActivity extends AppCompatActivity {
                 editProfile();
             }
         });
+
+        //Remove original toolbar tittle
+        getSupportActionBar().setTitle(null);
     }
 
     @Override
@@ -81,7 +87,8 @@ public class ProfileActivity extends AppCompatActivity {
                 ImageView imageViewAvatar = findViewById(R.id.imageViewAvatar);
 
                 name.setText(profile.name);
-                date.setText(profile.created.toString());
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                date.setText(fmt.format(profile.created));
                 description.setText(profile.description);
                 imageViewAvatar.setImageBitmap(profile.image);
             } else {

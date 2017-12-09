@@ -67,6 +67,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
             }
         });
+
+        //Remove original toolbar tittle
+        //getSupportActionBar().setTitle(null);
     }
 
     @Override
