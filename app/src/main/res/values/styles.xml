@@ -32,7 +32,7 @@
     <style name="ChirpImage">
         <item name="android:layout_width">72px</item>
         <item name="android:layout_height">72px</item>
-        <item name ="android:scaleType">fitXY</item>
+        <item name="android:scaleType">fitXY</item>
     </style>
 
     <style name="BlackButton" parent="Widget.AppCompat.Button.Colored">

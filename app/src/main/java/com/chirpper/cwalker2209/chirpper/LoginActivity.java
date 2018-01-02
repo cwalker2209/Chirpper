@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.chirpper.cwalker2209.chirpper.database.AppDatabase;
 import com.chirpper.cwalker2209.chirpper.database.User;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //get database
+        //services
+        FirebaseInstanceId.getInstance().getToken();
+        SyncAlarm alarm = new SyncAlarm();
+        alarm.setAlarm(App.get().getApplicationContext(), 0);
+
+        //get local database
         db = App.get().getDB();
 
         // Set up the login form.

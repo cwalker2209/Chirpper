@@ -62,11 +62,11 @@
                 app:elevation="@dimen/fab_margin"
                 app:srcCompat="@drawable/ic_menu_send" />
 
-            <include
-                layout="@layout/content_feed"
+            <ListView
+                android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                tools:listitem="@layout/list" />
 
         </android.support.design.widget.CoordinatorLayout>
 

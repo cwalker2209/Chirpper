@@ -13,7 +13,7 @@ import java.util.List;
 
 @Dao
 public interface PostDAO {
-    @Query("SELECT * FROM post")
+    @Query("SELECT * FROM post ORDER BY created DESC")
     List<Post> getAll();
 
     @Query("SELECT * FROM post WHERE id IN (:userIds)")

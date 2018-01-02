@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".App"
@@ -64,6 +65,27 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chirpper.cwalker2209.chirpper.ProfileActivity" />
         </activity>
+        <activity
+            android:name=".ContactActivity"
+            android:label="@string/title_activity_contact"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chirpper.cwalker2209.chirpper.FeedActivity" />
+        </activity>
+
+        <service
+            android:name=".UpdateService"
+            android:label="Update service">
+        </service>
+        <receiver android:name=".SyncAlarm"/>
+        <service
+            android:name=".ChirpperFirebaseId">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
+
 
 </manifest>

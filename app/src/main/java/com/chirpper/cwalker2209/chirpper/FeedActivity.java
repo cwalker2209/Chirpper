@@ -1,8 +1,10 @@
 package com.chirpper.cwalker2209.chirpper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,6 +23,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +31,12 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -40,6 +47,7 @@ import com.chirpper.cwalker2209.chirpper.database.Post;
 import com.chirpper.cwalker2209.chirpper.database.Profile;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FeedActivity extends AppCompatActivity
@@ -48,9 +56,16 @@ public class FeedActivity extends AppCompatActivity
     //database reference
     AppDatabase db;
 
+    private ListView list;
+    private BaseAdapter adapter;
     private int rowId;
     private int editTextId;
     private Profile userProfile;
+    private List<Post> posts;
+    private List<Profile> profiles;
+    private Context context;
+
+    private String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +74,13 @@ public class FeedActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        context = this;
+
         //get database
         db = App.get().getDB();
+
+        //get listview
+        list = findViewById(R.id.list);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,9 +99,9 @@ public class FeedActivity extends AppCompatActivity
         fabNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addMessage(null, userProfile, true);
-                fabNew.setVisibility(View.INVISIBLE);
-                fabSave.setVisibility(View.VISIBLE);
+                newChirp();
+                //fabNew.setVisibility(View.INVISIBLE);
+                //fabSave.setVisibility(View.VISIBLE);
             }
         });
 
@@ -145,20 +165,17 @@ public class FeedActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_feed) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_contact) {
+            Intent intent = new Intent(this, ContactActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
@@ -167,9 +184,36 @@ public class FeedActivity extends AppCompatActivity
         return true;
     }
 
-    private void addMessage(Post post, Profile profile, boolean isNew) {
-        TableLayout table = findViewById(R.id.feedTable);
-        TableRow row = createChirp();
+    private void newChirp(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Create New Chirp");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                message = input.getText().toString();
+                new savePostTask(context).execute();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    /*private void addMessage(Post post, Profile profile, boolean isNew) {
         ImageView image = new ImageView(this, null, R.style.ChirpImage);
 
         image.setId(View.generateViewId());
@@ -186,8 +230,6 @@ public class FeedActivity extends AppCompatActivity
 
 
         rowId = View.generateViewId();
-        row.setId(rowId);
-        row.addView(image);
 
         if (isNew){
             EditText editText = new EditText(this);
@@ -195,75 +237,14 @@ public class FeedActivity extends AppCompatActivity
             editTextId = View.generateViewId();
             editText.setId(editTextId);
             editText.requestFocus();
-
-            row.addView(editText);
         }
         else{
-            TextView textView = new TextView(this, null , R.style.Chirp);
-
-            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss");
-            String formatedDate = fmt.format(post.created);
-
-            textView.setId(View.generateViewId());
-            textView.setText(Html.fromHtml("<small>" + profile.name + "</small>" +  "<br />" +
-                    "<big>" + post.text + "</big>" + "<br />" +
-                    "<small>" + formatedDate + "</small>"));
-            textView.setPadding(10,0,0,0);
-
-            row.addView(textView);
         }
-
-        table.addView(row, 0);
-        table.invalidate();
-
         if(isNew){
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
         }
-    }
-
-    private void cleanPost(Post post){
-        TableRow row = findViewById(rowId);
-        EditText editText = findViewById(editTextId);
-        TextView textView = new TextView(this, null ,R.style.Chirp);
-        Profile profile = userProfile;
-
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss");
-        String formattedDate = fmt.format(post.created);
-
-        textView.setId(View.generateViewId());
-        textView.setText(Html.fromHtml("<small>" + profile.name + "</small>" +  "<br />" +
-                "<big>" + editText.getText() + "</big>" + "<br />" +
-                "<small>" + formattedDate + "</small>"));
-        textView.setPadding(10,0,0,0);
-
-        row.removeView(editText);
-        row.addView(textView);
-
-        row.invalidate();
-    }
-
-    private TableRow createChirp(){
-        TableRow row = new TableRow(this);
-
-        TableLayout.LayoutParams tableRowParams=
-                new TableLayout.LayoutParams
-                        (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
-
-        int leftMargin=10;
-        int topMargin=2;
-        int rightMargin=10;
-        int bottomMargin=2;
-
-        tableRowParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
-
-        row.setLayoutParams(tableRowParams);
-
-        row.setBackgroundResource(R.drawable.chirp);
-        row.setPadding(10,10,10,10);
-
-        return row;
-    }
+    }*/
 
     protected class getPostsTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -271,21 +252,9 @@ public class FeedActivity extends AppCompatActivity
         protected Boolean doInBackground(Void... params) {
 
             try {
-                TableLayout table = findViewById(R.id.feedTable);
-                table.removeAllViewsInLayout();
+                posts = db.postDAO().getAll();
+                profiles = db.profileDAO().getAll();
 
-                List<Post> posts = db.postDAO().getAll();
-                //TODO: Fix with a proper db join
-                for (final Post post : posts) {
-                    final Profile profile = db.profileDAO().findByUserId(post.userId);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // This code will always run on the UI thread, therefore is safe to modify UI elements.
-                            addMessage(post, profile, false);
-                        }
-                    });
-                }
                 return true;
             } catch (Exception e) {
                 Log.e("DB", e.getMessage());
@@ -297,6 +266,9 @@ public class FeedActivity extends AppCompatActivity
         protected void onPostExecute(final Boolean success) {
 
             if (success) {
+                adapter = new ChirpAdapter(context, posts, profiles);
+                list.setAdapter(adapter);
+
                 Context context = getApplicationContext();
                 CharSequence text = "Chirps sucessfully loaded";
                 int duration = Toast.LENGTH_SHORT;
@@ -326,13 +298,11 @@ public class FeedActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            TableRow row = findViewById(rowId);
-            EditText editText = findViewById(editTextId);
-            TextView textView = new TextView(mContext);
-            post = new Post(editText.getText().toString(), App.get().getUserId());
+            post = new Post(message, App.get().getUserId());
 
             try {
                 db.postDAO().insert(post);
+                posts.add(0, post);
             }
             catch (Exception e){
                 Log.e( "DBPOST", e.getMessage() );
@@ -345,13 +315,16 @@ public class FeedActivity extends AppCompatActivity
         protected void onPostExecute(final Boolean success) {
 
             if (success) {
+                adapter.notifyDataSetChanged();
+
                 Context context = getApplicationContext();
                 CharSequence text = "Chirp sucessfully saved";
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
-                cleanPost(post);
+
+
             } else {
                 Context context = getApplicationContext();
                 CharSequence text = "Chirp failed to save";

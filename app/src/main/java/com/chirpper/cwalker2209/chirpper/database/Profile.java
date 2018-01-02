@@ -23,8 +23,8 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         onDelete = CASCADE))
 public class Profile {
     @PrimaryKey(autoGenerate = true)
-    long id;
-    long userId;
+    public long id;
+    public long userId;
 
     public String name;
     public Date created;
